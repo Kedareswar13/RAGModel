@@ -4,7 +4,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
-from models.llm import get_chatgroq_model
+from models.llm import get_gemini_model
 from db.database import init_db
 from app.rag_pipeline import build_vectorstore_from_pdfs
 from app.tools import rag_tool, booking_persistence_tool, email_tool
@@ -111,7 +111,7 @@ def chat_and_booking_page():
     booking_state = get_booking_state(st.session_state)
 
     try:
-        llm = get_chatgroq_model()
+        llm = get_gemini_model()
     except Exception as e:
         llm = None
         st.warning(f"LLM not available: {e}")
@@ -155,7 +155,7 @@ def chat_and_booking_page():
                 )
             else:
                 if llm is None:
-                    answer = "LLM is not configured. Please set GROQ_API_KEY in environment or Streamlit secrets."
+                    answer = "LLM is not configured. Please set GEMINI_API_KEY in environment or Streamlit secrets."
                 else:
                     if st.session_state.vectorstore is not None:
                         answer = rag_tool(user_input, st.session_state.vectorstore, llm)
